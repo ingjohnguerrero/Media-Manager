@@ -146,6 +146,15 @@ CI considerations
 - Run `pytest -q` and fail fast on errors.
 - Cache `.pytest_cache` and virtualenv artifacts if helpful.
 
+Maintaining Mermaid Diagrams
+---------------------------
+- Mermaid diagrams (class, ERD, sequence) are located in `README.md` under the "Architecture Diagrams" section.
+- Whenever you change models, DTOs, database schema, or API routes, update the corresponding Mermaid diagrams to reflect the new structure and flow.
+- Use clear Mermaid syntax and keep diagrams concise but accurate. See the current diagrams in `README.md` for examples.
+- After major refactors, review all diagrams for correctness and completeness.
+- If you add new features (e.g., new media types, new endpoints), add/update diagrams to illustrate the changes.
+- This helps keep documentation useful for onboarding, troubleshooting, and architectural reviews.
+
 Appendix: useful commands
 ------------------------
 - Sync dev environment: `pipenv sync --dev`

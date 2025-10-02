@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form
 from sqlmodel import SQLModel, Field, Session, select
 from sqlalchemy import Column, String
 from typing import Optional, List
 from src.database import get_db
 from src.strategies.media_strategy import get_processor
 from src.dto.media_dto import MediaCreateDTO, ImageCreateDTO, VideoCreateDTO, MediaReadDTO
+import os
 
 router = APIRouter()
 
@@ -27,8 +28,23 @@ class Video(SQLModel):
     url: str
 
 @router.post("/media/", status_code=201, response_model=MediaReadDTO)
-def create_media(media_dto: MediaCreateDTO, session: Session = Depends(get_db)):
-    media = Media(**media_dto.model_dump())
+def create_media(
+    alt_text: str = Form(...),
+    extension: str = Form(...),
+    media_type: str = Form("media"),
+    file: UploadFile = None,
+    session: Session = Depends(get_db)
+):
+    # Save uploaded file if present
+    if file:
+        os.makedirs("uploads", exist_ok=True)
+        file_location = f"uploads/{file.filename}"
+        with open(file_location, "wb") as f:
+            f.write(file.file.read())
+        url = file_location
+    else:
+        url = ""
+    media = Media(alt_text=alt_text, extension=extension, url=url, media_type=media_type)
     session.add(media)
     session.commit()
     session.refresh(media)
@@ -60,3 +76,31 @@ def create_video(video_dto: VideoCreateDTO, session: Session = Depends(get_db)):
     session.commit()
     session.refresh(m)
     return MediaReadDTO.from_orm(m)
+
+@router.get("/media/{media_id}", response_model=MediaReadDTO)
+def get_media_by_id(media_id: int, session: Session = Depends(get_db)):
+    media = session.get(Media, media_id)
+    if not media:
+        raise HTTPException(status_code=404, detail="Media not found")
+    return MediaReadDTO.from_orm(media)
+
+@router.put("/media/{media_id}", response_model=MediaReadDTO)
+def update_media(media_id: int, media_dto: MediaCreateDTO, session: Session = Depends(get_db)):
+    media = session.get(Media, media_id)
+    if not media:
+        raise HTTPException(status_code=404, detail="Media not found")
+    for key, value in media_dto.model_dump().items():
+        setattr(media, key, value)
+    session.add(media)
+    session.commit()
+    session.refresh(media)
+    return MediaReadDTO.from_orm(media)
+
+@router.delete("/media/{media_id}", status_code=204)
+def delete_media(media_id: int, session: Session = Depends(get_db)):
+    media = session.get(Media, media_id)
+    if not media:
+        raise HTTPException(status_code=404, detail="Media not found")
+    session.delete(media)
+    session.commit()
+    return
