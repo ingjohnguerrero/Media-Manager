@@ -57,15 +57,26 @@ Common pitfalls and how to fix them
    - Cause: production DB was created before the model included `media_type`.
    - Fix: run migration script to add the column.
 
-2. Tests touching production DB
+2. Pydantic v2 from_orm() error: `You must set the config attribute from_attributes=True to use from_orm`
+   - Cause: DTO class does not have the correct config for Pydantic v2.
+   - Fix: In your DTO, add:
+     ```python
+     class MediaReadDTO(BaseModel):
+         ...
+         model_config = {"from_attributes": True}
+     ```
+   - Remove any old `Config` class with `orm_mode=True` (used in v1).
+   - For Pydantic v1, use `class Config: orm_mode = True`. For v2, use `model_config = {"from_attributes": True}`.
+
+3. Tests touching production DB
    - Cause: auto table creation at import time.
    - Fix: remove `SQLModel.metadata.create_all(engine)` from import-time code; create tables only in test fixtures or migration scripts.
 
-3. Dependency override not working
+4. Dependency override not working
    - Cause: using a factory or lambda instead of a concrete function.
    - Fix: use a concrete `get_db()` dependency and override it directly.
 
-4. SQLModel metadata incomplete in tests
+5. SQLModel metadata incomplete in tests
    - Cause: not importing all models before creating tables.
    - Fix: import all models for side-effect in test files.
 

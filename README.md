@@ -48,9 +48,80 @@ python3 scripts/db_inspect.py
 - `src/main.py` — FastAPI app, router registration (no auto table creation)
 - `src/routes/media_routes.py` — models, endpoints, strategy usage
 - `src/strategies/media_strategy.py` — strategy pattern for media processing
-- `tests/` — pytest tests (in-memory DB, dependency overrides)
-- `scripts/` — migration, smoke test, DB inspection
-- `agents.md` — agent/developer guide
+
+## Architecture Diagrams
+
+### Class Diagram
+```mermaid
+classDiagram
+    class Media {
+        int id
+        str alt_text
+        str extension
+        str url
+        str media_type
+    }
+    class Image {
+        <<inherits Media>>
+    }
+    class Video {
+        <<inherits Media>>
+    }
+    class MediaCreateDTO {
+        str alt_text
+        str extension
+        str url
+        str media_type
+    }
+    class ImageCreateDTO {
+        str alt_text
+        str extension
+        str url
+    }
+    class VideoCreateDTO {
+        str alt_text
+        str extension
+        str url
+    }
+    class MediaReadDTO {
+        int id
+        str alt_text
+        str extension
+        str url
+        str media_type
+    }
+    Image --|> Media
+    Video --|> Media
+```
+
+### Entity Relationship Diagram (ERD)
+```mermaid
+erDiagram
+    MEDIA {
+        INT id PK
+        STRING alt_text
+        STRING extension
+        STRING url
+        STRING media_type
+    }
+```
+*All media types (image, video, etc.) are stored in the MEDIA table, distinguished by the media_type column.*
+
+### Sequence Diagram: Create Image
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Strategy
+    participant DB
+    Client->>API: POST /images/ (ImageCreateDTO)
+    API->>Strategy: process_image(dto)
+    Strategy-->>API: processed dto
+    API->>DB: INSERT INTO media (media_type='image', ...)
+    DB-->>API: created Media
+    API-->>Client: MediaReadDTO (with id)
+```
+*Shows the flow for creating an image: request, strategy processing, DB insert, and response.*
 
 ## Testing conventions
 - Tests use in-memory SQLite (`sqlite:///:memory:`) with `StaticPool`.
@@ -93,4 +164,3 @@ class MediaDTO(BaseModel):
 ---
 
 For questions or improvements, see `agents.md` or open an issue.
-
