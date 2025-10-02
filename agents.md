@@ -186,3 +186,7 @@ Contact & follow-ups
 ---
 
 This `agents.md` is a living doc — keep it updated with new recurring errors and best practices as the project evolves.
+
+Context Folder Maintenance
+-------------------------
+Whenever you add, update, or remove shared configuration, dependencies, or context managers, review and update the `context/` folder. This ensures that centralized settings, dependency injection, and environment logic remain accurate and useful for all contributors and agents. Document any changes in `README.md` if they affect usage or setup.
