@@ -155,6 +155,10 @@ Maintaining Mermaid Diagrams
 - If you add new features (e.g., new media types, new endpoints), add/update diagrams to illustrate the changes.
 - This helps keep documentation useful for onboarding, troubleshooting, and architectural reviews.
 
+Documentation
+-------------
+Whenever you make changes to the project, review and update the `README.md` file if necessary to keep documentation accurate and complete. This ensures that onboarding, usage, and architectural information remain up to date for all contributors and agents.
+
 Appendix: useful commands
 ------------------------
 - Sync dev environment: `pipenv sync --dev`
