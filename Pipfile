@@ -5,8 +5,18 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
+httpx = "*"
+sqlmodel = "*"
+anyio = "*"
+pytest-asyncio = "*"
+pytest-tornasync = "*"
+pytest-trio = "*"
+pytest-twisted = "*"
+twisted = "*"
+uvicorn = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"
