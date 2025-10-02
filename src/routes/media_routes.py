@@ -28,7 +28,7 @@ class Video(SQLModel):
 
 @router.post("/media/", status_code=201, response_model=MediaReadDTO)
 def create_media(media_dto: MediaCreateDTO, session: Session = Depends(get_db)):
-    media = Media(**media_dto.dict())
+    media = Media(**media_dto.model_dump())
     session.add(media)
     session.commit()
     session.refresh(media)
