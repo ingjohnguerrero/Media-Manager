@@ -144,8 +144,7 @@ class MediaDTO(BaseModel):
     extension: str
     url: str
     media_type: str
-    class Config:
-        orm_mode = True
+    model_config = {'from_attributes': True}
 ```
 
 ## Strategy pattern
