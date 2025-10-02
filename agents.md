@@ -146,6 +146,19 @@ CI considerations
 - Run `pytest -q` and fail fast on errors.
 - Cache `.pytest_cache` and virtualenv artifacts if helpful.
 
+Maintaining Mermaid Diagrams
+---------------------------
+- Mermaid diagrams (class, ERD, sequence) are located in `README.md` under the "Architecture Diagrams" section.
+- Whenever you change models, DTOs, database schema, or API routes, update the corresponding Mermaid diagrams to reflect the new structure and flow.
+- Use clear Mermaid syntax and keep diagrams concise but accurate. See the current diagrams in `README.md` for examples.
+- After major refactors, review all diagrams for correctness and completeness.
+- If you add new features (e.g., new media types, new endpoints), add/update diagrams to illustrate the changes.
+- This helps keep documentation useful for onboarding, troubleshooting, and architectural reviews.
+
+Documentation
+-------------
+Whenever you make changes to the project, review and update the `README.md` file if necessary to keep documentation accurate and complete. This ensures that onboarding, usage, and architectural information remain up to date for all contributors and agents.
+
 Appendix: useful commands
 ------------------------
 - Sync dev environment: `pipenv sync --dev`
@@ -173,3 +186,7 @@ Contact & follow-ups
 ---
 
 This `agents.md` is a living doc — keep it updated with new recurring errors and best practices as the project evolves.
+
+Context Folder Maintenance
+-------------------------
+Whenever you add, update, or remove shared configuration, dependencies, or context managers, review and update the `context/` folder. This ensures that centralized settings, dependency injection, and environment logic remain accurate and useful for all contributors and agents. Document any changes in `README.md` if they affect usage or setup.
